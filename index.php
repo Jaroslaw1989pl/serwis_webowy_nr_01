@@ -13,8 +13,12 @@
     <main>
         <header>
             <div id="top_bar">
-                <input type="button" id="login_form_button" value="ZALOGUJ SIĘ">
-                <input type="button" id="register_form_button" value="ZAREJESTRUJ SIĘ">
+                <a href="formularz_logowania.php">
+                    <input type="button" id="login_form_button" value="ZALOGUJ SIĘ">
+                </a>
+                <a href="formularz_rejestracji.php">
+                    <input type="button" id="register_form_button" value="ZAREJESTRUJ SIĘ">
+                </a>
             </div>
         </header>
     </main>
