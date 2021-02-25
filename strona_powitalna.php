@@ -11,7 +11,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
 	<meta name="viewport" content="width=device-width,initial-scale=1.0" >
 	
-	<title>Strona powitalna serwisu webowego nr 01</title>
+	<title>Witaj w serwisie Playfab</title>
 </head>
 <body>
 	<main>

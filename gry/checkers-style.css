@@ -1,0 +1,71 @@
+body{
+}	
+    /*PLANSZA*/
+    #board{
+        float: left;
+        width: 640px;
+        height: 640px;
+        background-color: yellow;
+    }
+
+        #start_button{
+            position: relative;
+            left: 50%;
+            transform: translate(-50%);
+        }
+    
+        .corner_square{
+            float: left;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+        }
+        
+        .letter_field{
+            float: left;
+            width: 75px;
+            height: 20px;
+            text-align: center;
+            background-color: orange;
+        }
+        
+        .number_field{
+            float: left;
+            width: 20px;
+            height: 75px;
+            text-align: center;
+            vertical-align: middle;
+            background-color: green;
+        }
+        
+        .field_white{
+            margin: 0;
+            padding: 0;
+            float: left;
+            width: 75px;
+            height: 75px;
+            background-color: white;
+            border: 0;
+        }
+        
+        .field_black{
+            margin: 0;
+            padding: 0;
+            float: left;
+            width: 75px;
+            height: 75px;
+            background-color: black;
+            border: 0;
+        }
+        
+            /*PIONKI*/
+            .pawn{
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                border-radius: 50%;
+            }
+    
+    #panel{
+        float: left;
+    }

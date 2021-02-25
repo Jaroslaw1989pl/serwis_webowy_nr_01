@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>Zagadka</title>
+	
+	<style>
+		#cake{
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			margin: 0;
+			padding: 0;
+			width: 500px;
+			height: 500px;
+			border: 4px solid brown;
+			border-radius: 50%;
+		}
+			#start_button{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+		
+			.candle{
+				position: absolute;
+				margin: 0;
+				padding: 0;
+				width: 75px;
+				height: 75px;
+				border: 0;
+				border-radius: 50%;
+			}
+			
+			#candle_01{				
+				left: 50%;
+				transform: translate(-50%, 50%);
+				background-color: red;
+			}
+			
+			#candle_02{
+				left: 75%;
+				top: 25%;
+				transform: translate(-50%, -50%);
+				background-color: red;
+			}
+			
+			#candle_03{
+				left: 100%;
+				top: 50%;
+				transform: translate(-150%, -50%);
+				background-color: red;
+			}
+			
+			#candle_04{
+				left: 75%;
+				top: 75%;
+				transform: translate(-50%, -50%);
+				background-color: red;
+			}
+			
+			#candle_05{
+				left: 50%;
+				top: 100%;
+				transform: translate(-50%, -150%);
+				background-color: red;
+			}
+			
+			#candle_06{
+				left: 25%;
+				top: 75%;
+				transform: translate(-50%, -50%);
+				background-color: red;
+			}
+			
+			#candle_07{
+				top: 50%;
+				transform: translate(50%, -50%);
+				background-color: red;
+			}
+			
+			#candle_08{
+				left: 25%;
+				top: 25%;
+				transform: translate(-50%, -50%);
+				background-color: red;
+			}
+		
+		#scoreboard{
+		}
+			
+	</style>
+
+</head>
+
+<body onload="initialSettings()">
+	
+	<div id="cake">
+		<input type="button" id="start_button" value="START" onclick="startGame()">
+
+		<input type="button" id="candle_01" class="candle" name="1" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_02" class="candle" name="2" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_03" class="candle" name="3" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_04" class="candle" name="4" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_05" class="candle" name="5" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_06" class="candle" name="6" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_07" class="candle" name="7" value="1" onclick="colorChange(this.name, this.value)" disabled>
+		<input type="button" id="candle_08" class="candle" name="8" value="1" onclick="colorChange(this.name, this.value)" disabled>
+	</div>
+	<div id="scoreboard">
+		<h3 id="timmer_h3"></h3><br>
+		<h3 id="attempts_h3"></h3><br>
+	</div>
+
+
+	<script type="text/javascript">
+
+		var attempts = 0; //zmienna przechowująca liczbę prób
+
+		var hours = 0;
+		var minutes = 0;
+		var seconds = 0;	
+
+		//Ustawienie początkowe stanu gry
+		function initialSettings()
+		{
+			for(i=1; i<=8; i++)
+			{
+				document.getElementById("candle_0" + i).disabled = true;
+			}
+		}
+
+		//rozpoczęcie gry
+		function startGame()
+		{
+			for(i=1; i<=8; i++)
+			{
+				document.getElementById("candle_0" + i).disabled = false;
+			}
+			timer(); //wywołanie funkcji odloczającej czas
+
+			document.getElementById("attempts_h3").innerHTML = "<h3>Liczba prób: " + attempts + "</h3>";
+		}
+
+		//zmiana kolory przycisku po pliknięciu
+		function colorChange(candle_name, candle_value)
+		{
+			candle_name = Number(candle_name);
+	
+			if(candle_name == 1)
+			{
+				for(i=candle_name; i<=candle_name+1; i++)
+				{
+					let candle = document.getElementById("candle_0" + i);
+					if(candle.value == 1)
+					{	
+						candle.style.backgroundColor = "green";
+						candle.value = 0;
+					}
+					else if(candle.value == 0)
+					{
+						candle.style.backgroundColor = "red";
+						candle.value = 1;
+					}
+				}
+	
+				candle = document.getElementById("candle_0" + 8);
+				if(candle.value == 1)
+				{	
+					candle.style.backgroundColor = "green";
+					candle.value = 0;
+				}
+				else if(candle.value == 0)
+				{
+					candle.style.backgroundColor = "red";
+					candle.value = 1;
+				}
+			}
+			else if(candle_name == 8)
+			{
+				for(i=candle_name-1; i<=candle_name; i++)
+				{
+					let candle = document.getElementById("candle_0" + i);
+					if(candle.value == 1)
+					{	
+						candle.style.backgroundColor = "green";
+						candle.value = 0;
+					}
+					else if(candle.value == 0)
+					{
+						candle.style.backgroundColor = "red";
+						candle.value = 1;
+					}
+				}
+					
+				candle = document.getElementById("candle_0" + 1);
+				if(candle.value == 1)
+				{	
+					candle.style.backgroundColor = "green";
+					candle.value = 0;
+				}
+				else if(candle.value == 0)
+				{
+					candle.style.backgroundColor = "red";
+					candle.value = 1;
+				}
+			}
+			else
+			{
+				for(i=candle_name-1; i<=candle_name+1; i++)
+				{
+					let candle = document.getElementById("candle_0" + i);
+					if(candle.value == 1)
+					{	
+						candle.style.backgroundColor = "green";
+						candle.value = 0;
+					}
+					else if(candle.value == 0)
+					{
+						candle.style.backgroundColor = "red";
+						candle.value = 1;
+					}
+				}
+			}
+	
+			/*
+			var candle = document.getElementById("candle_0" + candle_name);
+			if(candle.value == 1)
+			{	
+				candle.style.backgroundColor = "green";
+				candle.value = 0;
+			}
+			else if(candle.value == 0)
+			{
+				candle.style.backgroundColor = "red";
+				candle.value = 1;
+			}
+			*/
+			
+			attempts++;
+	
+			document.getElementById("attempts_h3").innerHTML = "<h3>Liczba prób: " + attempts + "</h3>";
+			
+			winningCheck(); //wywołanie funkcji sprawdzającej wygraną
+		}		
+			
+		//funkcja sprawdzająca wygraną
+		function winningCheck()
+		{
+			let candles_out = 0; //zmienna przechowująca liczbę zapalonych świec
+
+			for(i=8; i>0; i--)
+			{
+				candles_out += document.getElementById("candle_0" + i).value;
+			}	
+			
+			if(candles_out == 0) //warunek sprawdzający wygraną
+			{
+				for(i=8; i>0; i--)
+				{
+					let candle = document.getElementById("candle_0" + i);
+					candle.style.backgroundColor = "red";
+					candle.value = 1;
+				}
+				
+				alert("Wygrana w " + attempts + " próbach");
+				
+				attempts = 0;
+				document.getElementById("attempts_h3").innerHTML = "<h3>Liczba prób: " + attempts + "</h3>";
+			}
+		}
+
+		//funkcja odliczająca czas
+		function timer()
+		{
+			
+			seconds += 1;
+			
+			if(seconds >= 60) 
+			{
+				seconds = 0;
+				minutes += 1;			
+			}			
+			if(minutes >= 60)
+			{
+				minutes = 0;
+				hours += 1;					
+			}
+			if(hours > 23) location.reload();
+			else
+			{				
+				if(seconds < 10) var s = "0" + seconds;
+				else s = seconds;
+				if(minutes < 10) var m = "0" + minutes;
+				else m = minutes;
+				if(hours < 10) var h = "0" + hours;
+				else h = hours;
+				
+				document.getElementById("timmer_h3").innerHTML = "<h3>Czas: " + h + ":" + m + ":" + s + "</h3>";
+			
+				setTimeout("timer()", 1000);
+			}
+		}
+			
+	</script>
+
+</body>
+</html>

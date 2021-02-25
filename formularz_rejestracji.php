@@ -11,7 +11,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
 	<meta name="viewport" content="width=device-width,initial-scale=1.0" >
 	
-	<title>Formularz rejestracji do serwisu webowego nr 01</title>
+	<title>Rejestracja w serwisie Playfab</title>
 </head>
 <body>
 	<main>
