@@ -67,7 +67,7 @@ function boardSettings(color_1, value_1, color_2, value_2, whose_move)
                     document.getElementById(board_tab[i][j]).disabled = true;
                 }
                 //ustawianie pionków na dole planszy
-                else if(i>4)
+                else if(i>4 && i!=6)
                 {
                     document.getElementById(board_tab[i][j]).style.backgroundColor = color_2;
                     document.getElementById(board_tab[i][j]).value = value_2;
@@ -77,7 +77,7 @@ function boardSettings(color_1, value_1, color_2, value_2, whose_move)
         }
     }
     //przyznanie ruchu jednej ze stron
-    //player_move = whose_move;
+    player_move = whose_move;
 }
 
 //aktywacja ustawień początkowych gry
@@ -99,57 +99,86 @@ function freePawnsActivation(you, rival)
     {
         for(j=0; j<board_tab[i].length; j++)
         {
-            if(document.getElementById(board_tab[i][j]).value=="0") //ustawienie pól pustych
-            {
-                document.getElementById(board_tab[i][j]).disabled = true;
-            }
-            else if(document.getElementById(board_tab[i][j]).value==rival) //ustawienie pól zajetych przez przeciwnika
-            {
-                document.getElementById(board_tab[i][j]).disabled = true;
-            }
-            else if(document.getElementById(board_tab[i][j]).value==you) //ustawienie pól z możliwością ruchu
+			//zmienna przechowujca obiekt, ktorym jest pole o danym indeksie
+			var checked_field = document.getElementById(board_tab[i][j]);
+			
+			//deaktywacja pól pustych
+            if(checked_field.value == "0") checked_field.disabled = true;
+            //deaktywacja pól zajetych przez przeciwnika
+            else if(checked_field.value == rival) checked_field.disabled = true;
+            //aktywacja pól z możliwością ruchu
+            else if(checked_field.value == you) 
             {
                 if(player == player_move)
                 {
-                    if(j==0 && document.getElementById(board_tab[i-1][j+1]).value=="0")
-                        document.getElementById(board_tab[i][j]).disabled = false;
-                    else if((j>0 && j<board_tab[i].length-1) && (document.getElementById(board_tab[i-1][j-1]).value=="0" || document.getElementById(board_tab[i-1][j+1]).value=="0"))
-                        document.getElementById(board_tab[i][j]).disabled = false;
-                    else if(j==board_tab[i].length-1 && document.getElementById(board_tab[i-1][j-1]).value=="0")
-                        document.getElementById(board_tab[i][j]).disabled = false;
+                    if((document.getElementById(board_tab[i-1][j-1]) != null && document.getElementById(board_tab[i-1][j-1]).value=="0") || (document.getElementById(board_tab[i-1][j+1]) != null && document.getElementById(board_tab[i-1][j+1]).value=="0"))
+                        checked_field.disabled = false;
                 }
                 else if(player != player_move)
                 {
-                    if(j==0 && document.getElementById(board_tab[i+1][j+1]).value=="0")
-                        document.getElementById(board_tab[i][j]).disabled = false;
-                    else if((j>0 && j<board_tab[i].length-1) && (document.getElementById(board_tab[i+1][j-1]).value=="0" || document.getElementById(board_tab[i+1][j+1]).value=="0"))
-                        document.getElementById(board_tab[i][j]).disabled = false;
-                    else if(j==board_tab[i].length-1 && document.getElementById(board_tab[i+1][j-1]).value=="0")
-                        document.getElementById(board_tab[i][j]).disabled = false;
+                    if((document.getElementById(board_tab[i+1][j+1]) != null && document.getElementById(board_tab[i+1][j+1]).value=="0") || (document.getElementById(board_tab[i+1][j-1]) != null && document.getElementById(board_tab[i+1][j-1]).value=="0"))
+                        checked_field.disabled = false;
                 }				
             }
         }
     }
 }
 
+//FUNKCJE AKTYWOWANE NAJECHANIEM NA ELEMENT
+function pawnHighlightOn(id, value)
+{
+    if(document.getElementById(id).disabled == false)
+        document.getElementById(id).style.border = "5px solid orange";
+}
+
+function pawnHighlightOff(id, value)
+{
+    if(document.getElementById(id).disabled == false)
+        document.getElementById(id).style.border = "none";
+}
 
 function move(id, val, name)
 {
-    for(i=0; i<board_tab.length; i++) //petla wyszukująca index klikniętego pola
-    {				
-        if(board_tab[i].indexOf(id)>-1) //warunek przypisujący znalezione indexy do zmiennych
-        {
-            index_horizontal = board_tab[i].indexOf(id);
-            index_vertical = i;					
-        }
-    }
+	index_vertical = board_tab.length - Number(id.substr(1, 1));
+	//warunek sprawdzajcy czy index został znaleziony		
+    if(board_tab[index_vertical].indexOf(id)>-1) index_horizontal = board_tab[index_vertical].indexOf(id);
     
     current_field = document.getElementById(board_tab[index_vertical][index_horizontal]);
-    left_field = document.getElementById(board_tab[index_vertical-1][index_horizontal-1]);
-    right_field = document.getElementById(board_tab[index_vertical-1][index_horizontal+1]);
+    if(player == player_move)
+    {
+        left_field = document.getElementById(board_tab[index_vertical-1][index_horizontal-1]);
+        right_field = document.getElementById(board_tab[index_vertical-1][index_horizontal+1]);
+    }
+    else if(player != player_move)
+    {
+        left_field = document.getElementById(board_tab[index_vertical+1][index_horizontal+1]);
+        right_field = document.getElementById(board_tab[index_vertical+1][index_horizontal-1]);
+    }
 
     current_field.style.backgroundColor = "green";
+    current_field.style.border = "none";
+    
+    //aktywacja pól pozwalajcych na ruch do przodu
+    if((left_field != null && left_field.value=="0") || (right_field != null && right_field.value=="0"))
+    {	
+        if(right_field != null)
+        {
+            right_field.disabled = false;
+            right_field.value="3";
+            right_field.style.backgroundColor = "yellow";
+            //previous_field=current_field;
+        }
+        
+        if(left_field != null)
+        {
+            left_field.disabled = false;
+            left_field.value="3";
+            left_field.style.backgroundColor = "yellow";
+            //previous_field=current_field;
+        }        
+    }
 
+    //zmiana kolejnosci ruchu i sprawdzenie mozliwosci ruchu dla przeciwnika
     if(player_move == "player_1")
     {
         player_move = "player_2";
@@ -160,39 +189,10 @@ function move(id, val, name)
         player_move = "player_1";
         freePawnsActivation("1", "2");
     }
-        
 
-    //aktywacja pól pozwalajcych na ruch			
-    /*if(current_field.value==1)
-    {
-        if((index_horizontal==0 && index_vertical>0) && right_field.value=="0")
-        {		
-            right_field.disabled = false;
-            right_field.value="3";
-            right_field.style.backgroundColor = "yellow";
-            previous_field=current_field;
-        }	
-        else if((index_horizontal==(board_tab[index_vertical].length-1) && index_vertical>0) && left_field.value=="0")
-        {
-            left_field.disabled = false;
-            left_field.value="3";
-            left_field.style.backgroundColor = "yellow";
-            previous_field=current_field;
-        }
-        else if(index_vertical>0 && (right_field.value=="0" || left_field.value=="0"))
-        {
-            left_field.disabled = false;
-            left_field.value="3";
-            left_field.style.backgroundColor = "yellow";
-            right_field.disabled = false;
-            right_field.value="3";
-            right_field.style.backgroundColor = "yellow";
-            previous_field=current_field;
-        }
-    }
     
     //przemieszczenie pionka
-    if(current_field.value=="3")
+    /*if(current_field.value=="3")
     {
         current_field.value = "1";
         current_field.style.backgroundColor = "blue";
