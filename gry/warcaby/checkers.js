@@ -18,6 +18,7 @@ var player_move = "player_1";
 
 var white_pawn_num = 0;
 var black_pawn_num = 0;
+var initiation = false; //zmienna przechowująca informację o tym czy szachownica została juz zainicjalizowana
 var turn_complete = false;
 
 //zmienne przechowujące index klikniętego pola 
@@ -102,36 +103,64 @@ function boardGenerator(board_tab)
 	if(player == "player_1") boardSettings("red", "2", "blue", "1", "player_1");
     else if(player == "player_2") boardSettings( "blue", "1", "red", "2", "player_1");
 
-    document.getElementById("score_board").innerHTML = '<p>pionki białe: '+white_pawn_num+' | czarne pionki: '+black_pawn_num+'</p><br>';
+    document.getElementById("score_board").innerHTML = '<p>białe pionki: '+white_pawn_num+' | czarne pionki: '+black_pawn_num+'</p><br>';
 }
 
 function boardSettings(color_1, value_1, color_2, value_2, whose_move)
 {
+    
+
     for(i=0; i<board_tab.length; i++)
     {
         for(j=(i+1)%2; j<board_tab[i].length; j+=2)
         {
             //ustawianie pionków na górze planszy
-            if(i<1)
+            if(i<3)
             {
                 document.getElementById(board_tab[i][j]).style.backgroundColor = color_1;
                 document.getElementById(board_tab[i][j]).name = "pawn";
                 document.getElementById(board_tab[i][j]).value = value_1;
                 document.getElementById(board_tab[i][j]).disabled = true;
-				
-				white_pawn_num++;
-				black_pawn_num++;
+				//zliczanie ustawionych pionków
+                if(initiation == false)
+                {
+                    if(player == "player_1") 
+                    {
+                        white_pawn_num = white_pawn_num;
+                        black_pawn_num++;
+                    }
+                    else if(player == "player_2") 
+                    {
+                        white_pawn_num++;
+                        black_pawn_num = black_pawn_num;
+                    }
+                }
             }
             //ustawianie pionków na dole planszy
-            else if(i>6)
+            else if(i>4)
             {
                 document.getElementById(board_tab[i][j]).style.backgroundColor = color_2;
         		document.getElementById(board_tab[i][j]).name = "pawn";
                 document.getElementById(board_tab[i][j]).value = value_2;
                 document.getElementById(board_tab[i][j]).disabled = true;
+                //zliczanie ustawionych pionków
+                if(initiation == false)
+                {
+                    if(player == "player_1") 
+                    {
+                        white_pawn_num++
+                        black_pawn_num = black_pawn_num;
+                    }
+                    else if(player == "player_2") 
+                    {
+                        white_pawn_num = white_pawn_num;
+                        black_pawn_num++;
+                    }
+                }
             }	 			
         }
     }
+    initiation = true;
     //przyznanie ruchu jednej ze stron
     //player_move = whose_move;
 }
@@ -145,9 +174,9 @@ function freePawnsActivation(player_value)
 {
     var i = 0, j = 0;
 	var num_of_captures = 0;
-	var checked_pawns = 0;
-	var captures_checked = false;
-	
+	var checked_pawns = 0; //zmienna informująca o tym ile pionków zostało sprawdzonych
+	var captures_checked = false; //zmienna informująca o tym czy bicia zostały sprawdzone
+
     Activation_loop:
     for(i=0; i<board_tab.length; i++)
     { 
@@ -158,17 +187,17 @@ function freePawnsActivation(player_value)
                 document.getElementById(board_tab[i][j]).disabled = true;
             //aktywacja pionków gracza z mozliwością bicia lub ruchu
             else if(document.getElementById(board_tab[i][j]).value == player_value) 
-            {   
+            {
 				//sprawdzanie mozliwości bicia
 				if(captures_checked == false)
 				{
 					if(pawnCaptureDetection(i, j) > 0) 
 					{
 						document.getElementById(board_tab[i][j]).disabled = false;
-						console.log("bicie " + document.getElementById(board_tab[i][j]).id);
 						num_of_captures++;
+                        checked_pawns++;
 						
-						if(i>=board_tab.length && j>=board_tab.length-1)
+						if(checked_pawns == ((player_value == "1") ? white_pawn_num : black_pawn_num))
 						{
 							captures_checked = true;
 							i = 0;
@@ -180,9 +209,9 @@ function freePawnsActivation(player_value)
 					else if(pawnCaptureDetection(i, j) == 0) 
 					{
 						document.getElementById(board_tab[i][j]).disabled = true;
-						console.log("BRAK bicia " + document.getElementById(board_tab[i][j]).id);
+                        checked_pawns++;
 						
-						if(i>=board_tab.length && j>=board_tab.length-1)
+						if(checked_pawns == ((player_value == "1") ? white_pawn_num : black_pawn_num))
 						{
 							captures_checked = true;
 							i = 0;
@@ -194,23 +223,15 @@ function freePawnsActivation(player_value)
 				}
 				
 				//sprawdzanie możliwości ruchu bez bicia
-				else if(captures_checked == true)
+				else if(captures_checked == true && num_of_captures == 0)
 				{
-					if(pawnMoveDetection(i, j) == true)
-					{
-						document.getElementById(board_tab[i][j]).disabled = false;
-						console.log("ruch " + document.getElementById(board_tab[i][j]).id);
-					}
-					else if(pawnMoveDetection(i, j) == false)
-					{
-						document.getElementById(board_tab[i][j]).disabled = true;
-						console.log("BRAK ruchu " + document.getElementById(board_tab[i][j]).id);
-					}
+					if(pawnMoveDetection(i, j) == true) document.getElementById(board_tab[i][j]).disabled = false;
+					else if(pawnMoveDetection(i, j) == false) document.getElementById(board_tab[i][j]).disabled = true;
 				}
             }
         }
     }
-		console.log("---------"+checked_pawns+"--------"+captures_checked);
+	console.log("---------"+checked_pawns+"--------"+captures_checked);
 }
 
 //Funkcja sprawdzająca mozliwości ruchu pionka
@@ -305,7 +326,6 @@ function pawnInteraction(id, val, name)
 	index_horizontal = board_tab[index_vertical].indexOf(id);
 
     current_pawn = document.getElementById(id);
-    current_pawn.disabled = true;
     current_pawn.style.border = "none";
 
     //Sprawdzenie czy wybrany został pionek czy puste pole
@@ -317,7 +337,7 @@ function pawnInteraction(id, val, name)
         if(name == "pawn")
         {
             //Sprawdzenie czy pionek ma mozliwość bicia?
-            if(pawnCaptureDetection(current_pawn) == 0)
+            if(pawnCaptureDetection(index_vertical, index_horizontal) == 0)
             {
                 //aktywacja pól z możliwością ruchu
                 if(player == player_move)
@@ -334,11 +354,11 @@ function pawnInteraction(id, val, name)
                 if(left_pawn != null && left_pawn.value == "0") left_pawn.disabled = false;
 
                 if(right_pawn != null && right_pawn.value == "0") right_pawn.disabled = false;
-            /*}
-            else if(pawnCaptureDetection(current_pawn) > 0)
-            {*/
+            }
+            else if(pawnCaptureDetection(index_vertical, index_horizontal) > 0)
+            {
                 //aktywacja pól z możliwością bicia
-                //console.log("bicie "+document.getElementById(board_tab[index_vertical][index_horizontal]).id+" na "+document.getElementById(board_tab[(index_vertical*(-1)+i+i)][(index_horizontal*(-1)+j+j)]).id);
+                
             }
         }
         else if(name == "queen")
@@ -352,7 +372,8 @@ function pawnInteraction(id, val, name)
             {
                 //!!!Funkcja aktywująca pola podczas bicia przez damę
             }
-        }
+        }        
+        current_pawn.disabled = true;
     }
     else if(val == "0")
     {
@@ -382,7 +403,7 @@ function pawnInteraction(id, val, name)
             freePawnsActivation("1");
         }
         //wyswietlanie wyniku
-        document.getElementById("score_board").innerHTML = '<p>pionki białe: '+white_pawn_num+' | czarne pionki: '+black_pawn_num+'</p><br>';
+        document.getElementById("score_board").innerHTML = '<p>białe pionki: '+white_pawn_num+' | czarne pionki: '+black_pawn_num+'</p><br>';
     }
 }
 
