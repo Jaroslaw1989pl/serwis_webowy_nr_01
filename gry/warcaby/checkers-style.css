@@ -57,6 +57,11 @@ body{
             background-color: black;
             border: 0;
         }
+
+        .field_black img{
+            width: 100%;
+            height: 100%;
+        }
         
             /*PIONKI*/
             .pawn{

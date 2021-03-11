@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+
+	<meta charset="utf-8" >
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" >
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+	<title>Playfab / Gry / Warcaby</title>
+	
+	<link rel="stylesheet" href="checkers-style.css">
+
+</head>
+<body onload="defaultSettings()">
+
+	<main>
+		<header>
+			
+		</header>
+		<article>
+			<div id="board">
+			
+			</div>
+			<!--TYMCZASOWY wybór strony-->
+			<div id="panel">
+				<input type="radio" id="white_pawns" class="side_selection" name="side_selection" value="player_1" onclick="sideSelection(this.value)">
+					<label for="white_pawns">białe pionki</label><br>
+				<input type="radio" id="black_pawns" class="side_selection" name="side_selection" value="player_2" onclick="sideSelection(this.value)">
+					<label for="black_pawns">czarne pionki</label><br>
+					<button id="start_button" onclick="startGame(this.id)">START</button>
+
+				<div id="score_board"></div>
+			</div>
+			<!---->
+		</article>
+	</main>
+	
+	<script src="checkers.js"></script>
+
+</body>
+<html>
