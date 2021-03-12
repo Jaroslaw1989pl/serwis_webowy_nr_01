@@ -1,3 +1,5 @@
+// REPOZYTORIUM https://github.com/Jaroslaw1989pl/serwis_webowy_nr_01
+
 //tablica symbolizujaca pola szachownicy
 var board_tab = [
     ["A8", "B8", "C8", "D8", "E8", "F8", "G8", "H8"],
